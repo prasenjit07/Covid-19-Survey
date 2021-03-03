@@ -1,0 +1,35 @@
+<div class="card text-center">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table mb-0" *ngIf="homes && homes.length">
+                <thead>
+                    <tr>
+                        <th>House Number</th>
+                        <th>House Address</th>
+                        <th>Total members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let home of homes">
+                        <td>
+                            <a [routerLink]="['/home', home.id]">
+                                {{ home.houseNumber }}
+                            </a>
+                        </td>
+                        <td>
+                            <a [routerLink]="['/home', home.id]">
+                                {{ home.houseAddress }}
+                            </a>
+                        </td>
+                        <td>{{ home.members.length }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class='nav-link text-primary' routerLinkActive='active' [routerLinkActiveOptions]="{exact: true}"
+        [routerLink]="['/home/0/add']">Add House
+    </button>
+
+</div>

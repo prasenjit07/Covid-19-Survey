@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div formArrayName="members" *ngFor="let member of houseForm.get('members')['controls']; let i = index;">
+            <div formArrayName="members" *ngFor="let member of members.controls; let i = index;">
                 <div [formGroupName]="i">
                     <div class="form-group row mb-2">
                         <label class="col-md-2 col-form-label" attr.for="{{ 'name' + i }}">Name</label>

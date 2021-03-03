@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators,FormArray} from '@angular/forms';
+import {Router,ActivatedRoute} from '@angular/router'
+import { Observable,Subscription } from 'rxjs';
+import { HomeService } from './home.service';
 
 @Component({
   selector: 'app-home-add',
@@ -8,8 +11,12 @@ import { FormGroup, FormBuilder, Validators,FormArray} from '@angular/forms';
 })
 export class HomeAddComponent implements OnInit {
 
+  pageTitle = 'Home Edit';
+  errorMessage: string;
+  home:any;
+  private sub: Subscription;
   houseForm:FormGroup;
-  constructor(private fb:FormBuilder){}
+  constructor(private fb:FormBuilder, private router:Router, private route:ActivatedRoute, private homeService: HomeService){}
 
   get members(): FormArray {
     return this.houseForm.get('members') as FormArray;
@@ -20,8 +27,19 @@ export class HomeAddComponent implements OnInit {
       houseNumber: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
       houseAddress: ['', [Validators.required,Validators.minLength(5),Validators.maxLength(40)]],
       members : this.fb.array([this.buildMember()])
-    })
+    });
+    this.sub = this.route.paramMap.subscribe(
+      params => {
+        const id = +params.get('id');
+        this.getHome(id);
+      }
+    );
   }
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+  
 
   addMember(): void {
     this.members.push(this.buildMember());
@@ -38,5 +56,35 @@ export class HomeAddComponent implements OnInit {
   save(): void {
     console.log(this.houseForm);
     console.log('Saved: ' + JSON.stringify(this.houseForm.value));
+  }
+
+  getHome(id: number): void {
+    this.homeService.getHome(id)
+      .subscribe({
+        next: (home) => this.displayProduct(home),
+        error: err => this.errorMessage = err
+      });
+  }
+
+  displayProduct(home): void {
+    if (this.houseForm) {
+      this.houseForm.reset();
+    }
+    this.home = home;
+
+    if (this.home.id === 0) {
+      this.pageTitle = 'Add Home';
+    } else {
+      this.pageTitle = `Edit Home: ${this.home.houseAddress}`;
+    }
+
+    // Update the data on the form
+    this.houseForm.patchValue({
+      productName: this.home.productName,
+      productCode: this.home.homeCode,
+      starRating: this.home.starRating,
+      description: this.home.description
+    });
+    this.houseForm.setControl('tags', this.fb.array(this.home.tags || []));
   }
 }
