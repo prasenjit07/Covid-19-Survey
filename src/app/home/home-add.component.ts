@@ -39,8 +39,6 @@ export class HomeAddComponent implements OnInit {
     this.sub.unsubscribe();
   }
 
-  
-
   addMember(): void {
     this.members.push(this.buildMember());
   }
@@ -53,20 +51,15 @@ export class HomeAddComponent implements OnInit {
     })
   }
 
-  save(): void {
-    console.log(this.houseForm);
-    console.log('Saved: ' + JSON.stringify(this.houseForm.value));
-  }
-
   getHome(id: number): void {
     this.homeService.getHome(id)
       .subscribe({
-        next: (home) => this.displayProduct(home),
+        next: (home) => this.displayHome(home),
         error: err => this.errorMessage = err
       });
   }
 
-  displayProduct(home): void {
+  displayHome(home:any): void {
     if (this.houseForm) {
       this.houseForm.reset();
     }
@@ -80,11 +73,55 @@ export class HomeAddComponent implements OnInit {
 
     // Update the data on the form
     this.houseForm.patchValue({
-      productName: this.home.productName,
-      productCode: this.home.homeCode,
-      starRating: this.home.starRating,
-      description: this.home.description
+      houseNumber: this.home.houseNumber,
+      houseAddress: this.home.houseAddress,
     });
-    this.houseForm.setControl('tags', this.fb.array(this.home.tags || []));
+    this.houseForm.setControl('members', this.fb.array(this.home.members));
+  }
+
+  deleteHome(): void {
+    if (this.home.id === 0) {
+      // Don't delete, it was never saved.
+      this.onSaveComplete();
+    } else {
+      if (confirm(`Really delete the home: ${this.home.houseAddress}?`)) {
+        this.homeService.deleteProduct(this.home.id)
+          .subscribe({
+            next: () => this.onSaveComplete(),
+            error: err => this.errorMessage = err
+          });
+      }
+    }
+  }
+
+  save(): void {
+    if (this.houseForm.valid) {
+      if (this.houseForm.dirty) {
+        const p = { ...this.home, ...this.houseForm.value };
+
+        if (p.id === 0) {
+          this.homeService.createHome(p)
+            .subscribe({
+              next: () => this.onSaveComplete(),
+              error: err => this.errorMessage = err
+            });
+        } else {
+          this.homeService.updateHome(p)
+            .subscribe({
+              next: () => this.onSaveComplete(),
+              error: err => this.errorMessage = err
+            });
+        }
+      } else {
+        this.onSaveComplete();
+      }
+    } else {
+      this.errorMessage = 'Please correct the validation errors.';
+    }
+  }
+  onSaveComplete(): void {
+    // Reset the form to clear the flags
+    this.houseForm.reset();
+    this.router.navigate(['/home']);
   }
 }

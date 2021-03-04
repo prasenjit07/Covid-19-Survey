@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        Enter details of your house
+        {{pageTitle}}
     </div>
     <div class="card-body">
         <form novalidate (ngSubmit)="save()" [formGroup]="houseForm">
@@ -104,14 +104,22 @@
             </div>
             <div class="form-group row mb-2">
                 <div class="col-md-4">
-                    <button class="btn btn-outline-primary" type="button"
-                        [disabled]="!members.valid" (click)="addMember()">
+                    <button class="btn btn-outline-primary" type="button" [disabled]="!members.valid"
+                        (click)="addMember()">
                         Add Another Member
                     </button>
                 </div>
             </div>
             <button class="btn btn-primary mr-3" type="submit" style="width:80px" [disabled]="!houseForm.valid">
                 Save
+            </button>
+            <button class="btn btn-outline-secondary mr-3" style="width:80px;" type="button" title="Cancel your edits"
+                [routerLink]="['home']">
+                Cancel
+            </button>
+            <button class="btn btn-outline-warning" style="width:80px" type="button" title="Delete this house"
+                (click)="deleteHome()">
+                Delete
             </button>
         </form>
     </div>
