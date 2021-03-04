@@ -43,10 +43,10 @@
                 </div>
             </div>
 
-            <div formArrayName="members" *ngFor="let member of members.controls; let i = index;">
+            <div formArrayName="members" *ngFor="let member of membersFormArray.controls; let i = index;">
                 <div [formGroupName]="i">
                     <div class="form-group row mb-2">
-                        <label class="col-md-2 col-form-label" attr.for="{{ 'name' + i }}">Name</label>
+                        <label class="col-md-2 col-form-label" attr.for="{{ 'name' + i }}">Name{{i+1}}</label>
                         <div class="col-md-8">
                             <input class="form-control" id="{{ 'name' + i }}" type="text" placeholder="Name(required)"
                                 formControlName="name" [ngClass]="{'is-invalid':(member.controls.name.touched || member.controls.name.dirty)&& 
@@ -99,12 +99,17 @@
 
                             </span>
                         </div>
+                        <div *ngIf="(membersFormArray.length!=1)">
+                            <button class="col-md-12 btn btn-outline-warning btn-md" type="button"
+                                title="Delete this member" (click)="deleteMember(i)">Delete Member
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-md-4">
-                    <button class="btn btn-outline-primary" type="button" [disabled]="!members.valid"
+                    <button class="btn btn-outline-primary" type="button" [disabled]="!membersFormArray.valid"
                         (click)="addMember()">
                         Add Another Member
                     </button>
@@ -114,7 +119,7 @@
                 Save
             </button>
             <button class="btn btn-outline-secondary mr-3" style="width:80px;" type="button" title="Cancel your edits"
-                [routerLink]="['home']">
+                [routerLink]="['/home']">
                 Cancel
             </button>
             <button class="btn btn-outline-warning" style="width:80px" type="button" title="Delete this house"
@@ -125,7 +130,7 @@
     </div>
 </div>
 
-<br>Dirty: {{ houseForm.dirty }}
+<!-- <br>Dirty: {{ houseForm.dirty }}
 <br>Touched: {{ houseForm.touched }}
 <br>Valid: {{ houseForm.valid }}
-<br>Value: {{ houseForm.value | json }}
+<br>Value: {{ houseForm.value | json }} -->

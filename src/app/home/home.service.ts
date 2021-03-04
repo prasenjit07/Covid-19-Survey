@@ -62,7 +62,7 @@ export class HomeService {
       .pipe(
         tap(() => console.log('updateHome: ' + home.id)),
         // Return the home on an update
-        map(() => home),
+         map(() => home),
         catchError(this.handleError)
       );
   }

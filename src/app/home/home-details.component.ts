@@ -10,7 +10,7 @@ import {HomeService} from './home.service'
 export class HomeDetailsComponent implements OnInit {
 
   errorMessage = '';
-  home: any | undefined;
+  home: any;
 
   constructor(private route: ActivatedRoute,
     private router: Router,

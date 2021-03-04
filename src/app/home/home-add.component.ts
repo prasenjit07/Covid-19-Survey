@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators,FormArray} from '@angular/forms';
-import {Router,ActivatedRoute} from '@angular/router'
-import { Observable,Subscription } from 'rxjs';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router'
+import { Observable, Subscription } from 'rxjs';
 import { HomeService } from './home.service';
 
 @Component({
@@ -13,25 +13,30 @@ export class HomeAddComponent implements OnInit {
 
   pageTitle = 'Home Edit';
   errorMessage: string;
-  home:any;
+  home: any;
   private sub: Subscription;
-  houseForm:FormGroup;
-  constructor(private fb:FormBuilder, private router:Router, private route:ActivatedRoute, private homeService: HomeService){}
+  houseForm: FormGroup;
+  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute, private homeService: HomeService) { }
 
-  get members(): FormArray {
+  get membersFormArray(): FormArray {
     return this.houseForm.get('members') as FormArray;
   }
 
   ngOnInit() {
     this.houseForm = this.fb.group({
-      houseNumber: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      houseAddress: ['', [Validators.required,Validators.minLength(5),Validators.maxLength(40)]],
-      members : this.fb.array([this.buildMember()])
+      houseNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      houseAddress: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(40)]],
+      members: this.fb.array([])
     });
     this.sub = this.route.paramMap.subscribe(
       params => {
         const id = +params.get('id');
         this.getHome(id);
+
+
+        if(id === 0){
+          this.addMember();
+        }
       }
     );
   }
@@ -40,14 +45,14 @@ export class HomeAddComponent implements OnInit {
   }
 
   addMember(): void {
-    this.members.push(this.buildMember());
+    this.membersFormArray.push(this.buildMember());
   }
 
-  buildMember():FormGroup{
+  buildMember(): FormGroup {
     return this.fb.group({
-      name:['',[Validators.required,Validators.minLength(3),Validators.maxLength(32)]],
-      gender:['',[Validators.required]],
-      age:['',[Validators.required,Validators.pattern("^[0-9]*$")]]
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
+      gender: ['', [Validators.required]],
+      age: ['', [Validators.required, Validators.pattern("^[0-9]*$")]]
     })
   }
 
@@ -59,16 +64,18 @@ export class HomeAddComponent implements OnInit {
       });
   }
 
-  displayHome(home:any): void {
+  displayHome(home: any): void {
     if (this.houseForm) {
       this.houseForm.reset();
     }
-    this.home = home;
 
+    this.home = home;
+    console.log(this.home);
     if (this.home.id === 0) {
       this.pageTitle = 'Add Home';
     } else {
       this.pageTitle = `Edit Home: ${this.home.houseAddress}`;
+      this.createFormArrayWithMembers(this.home.members);
     }
 
     // Update the data on the form
@@ -76,8 +83,25 @@ export class HomeAddComponent implements OnInit {
       houseNumber: this.home.houseNumber,
       houseAddress: this.home.houseAddress,
     });
-    this.houseForm.setControl('members', this.fb.array(this.home.members));
+
+    
+    //this.houseForm.setControl('members', this.createFormArrayWithMembers(this.home.members));
   }
+
+
+  createFormArrayWithMembers(members: any[]) {
+    //let tempMembersFormArray: FormArray;
+
+    members.forEach(member => {
+      this.membersFormArray.push(
+        this.fb.group({
+          name: [member.name, [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
+          gender: [member.gender, [Validators.required]],
+          age: [member.age, [Validators.required, Validators.pattern("^[0-9]*$")]]
+        }));
+    });
+  }
+
 
   deleteHome(): void {
     if (this.home.id === 0) {
@@ -92,6 +116,11 @@ export class HomeAddComponent implements OnInit {
           });
       }
     }
+  }
+
+  deleteMember(index: number): void {
+      this.membersFormArray.removeAt(index);
+      this.membersFormArray.markAsDirty();
   }
 
   save(): void {
@@ -119,6 +148,7 @@ export class HomeAddComponent implements OnInit {
       this.errorMessage = 'Please correct the validation errors.';
     }
   }
+
   onSaveComplete(): void {
     // Reset the form to clear the flags
     this.houseForm.reset();
