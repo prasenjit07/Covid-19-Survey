@@ -11,7 +11,7 @@ export class HomeComponent implements OnInit {
 
   homes:any[];
   errorMessage:string='';
-
+  total:number=0;
   constructor(private homeService: HomeService) {}
   
   ngOnInit(): void {
@@ -19,6 +19,15 @@ export class HomeComponent implements OnInit {
       next: homes => {
         this.homes = homes;
         console.log(homes);
+        var flag=0;
+        for (var i = 0; i < homes.length; i++) {
+          for (var j = 0; j <homes[i].members.length; j++) {
+               if(homes[i].members[j].age>60)
+                      flag=1;
+          }
+          this.total+=flag;
+          flag=0
+        }
       },
       error: err => this.errorMessage = err
     });

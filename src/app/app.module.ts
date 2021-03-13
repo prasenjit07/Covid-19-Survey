@@ -11,19 +11,20 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HomeData } from './home/home-data';
 import { HomeDetailsComponent } from './home/home-details.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeAddComponent,
     HomeComponent,
-    HomeDetailsComponent
+    HomeDetailsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     InMemoryWebApiModule.forRoot(HomeData),
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule, 
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -45,8 +45,8 @@ export class HomeData implements InMemoryDbService {
         houseAddress:'Jaipur',
         members:[
             {
-                name:'Nandini',
-                gender:'female',
+                name:'Aakashi',
+                gender:'male',
                 age: 20
             },
             {
@@ -55,9 +55,9 @@ export class HomeData implements InMemoryDbService {
                 age: 21
             },
             {
-                name:'Tanay',
+                name:'Praveen',
                 gender:'male',
-                age: 21
+                age: 71
             }
         ]
       },

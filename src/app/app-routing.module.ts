@@ -3,12 +3,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeAddComponent } from './home/home-add.component';
 import { HomeDetailsComponent } from './home/home-details.component';
 import { HomeComponent } from './home/home.component';
+import { HomeAddGuard } from './home/home-add.guard'
+//import { HomeRiskComponent } from './home/home-risk.component';
 
 const routes: Routes = [
-  { path: "home", component: HomeComponent },
-  { path: "home/:id", component: HomeDetailsComponent},
-  { path: "home/:id/add", component: HomeAddComponent },
-  { path: "", pathMatch: "full", redirectTo: "home"},
+  {
+    path: "home",
+    children:[
+      { path: "", component: HomeComponent },
+      { path: ":id", component: HomeDetailsComponent },
+      { path: ":id/add", component: HomeAddComponent, canDeactivate: [HomeAddGuard] },
+    ]
+  },
+  { path: "", pathMatch: "full", redirectTo: "home" },
 ];
 
 @NgModule({
