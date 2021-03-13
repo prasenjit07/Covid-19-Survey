@@ -18,18 +18,18 @@ export class HomeService {
   getHomes(): Observable<any> {
     return this.http.get<any>(this.homeUrl)
       .pipe(
-        tap(data => ('All: ' + JSON.stringify(data))),
+        tap(data => console.log('All: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
   getRiskHomes(): Observable<any> {
     return this.http.get<any>(this.homeUrl)
       .pipe(
-        tap(data => ('All: ' + JSON.stringify(data))),
+        tap(data => console.log('All: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
-
+  
   getHome(id:number): Observable<any> {
     if (id === 0) {
       return of(this.initializeProduct());

@@ -10,6 +10,7 @@ import {HttpClientModule} from '@angular/common/http'
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HomeData } from './home/home-data';
 import { HomeDetailsComponent } from './home/home-details.component';
+import { HomeThreatComponent } from './home/home-threat.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { HomeDetailsComponent } from './home/home-details.component';
     HomeAddComponent,
     HomeComponent,
     HomeDetailsComponent,
+    HomeThreatComponent,
   ],
   imports: [
     BrowserModule,
