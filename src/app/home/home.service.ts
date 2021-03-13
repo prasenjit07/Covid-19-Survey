@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
+import { Home } from './home';
 
 
 @Injectable({
@@ -15,17 +16,10 @@ export class HomeService {
   
   constructor(private http : HttpClient) { }
 
-  getHomes(): Observable<any> {
-    return this.http.get<any>(this.homeUrl)
+  getHomes(): Observable<Home> {
+    return this.http.get<Home>(this.homeUrl)
       .pipe(
-        tap(data => console.log('All: ' + JSON.stringify(data))),
-        catchError(this.handleError)
-      );
-  }
-  getRiskHomes(): Observable<any> {
-    return this.http.get<any>(this.homeUrl)
-      .pipe(
-        tap(data => console.log('All: ' + JSON.stringify(data))),
+        tap(data => JSON.stringify(data)),
         catchError(this.handleError)
       );
   }
@@ -37,7 +31,7 @@ export class HomeService {
     const url = `${this.homeUrl}/${id}`;
     return this.http.get<any>(url)
       .pipe(
-        tap(data => console.log('getProduct: ' + JSON.stringify(data))),
+        tap(data => JSON.stringify(data)),
         catchError(this.handleError)
       );
   }
@@ -47,7 +41,7 @@ export class HomeService {
     home.id = null;
     return this.http.post<any>(this.homeUrl, home, { headers })
       .pipe(
-        tap(data => console.log('createHome: ' + JSON.stringify(data))),
+        tap(data => 'createHome: ' + JSON.stringify(data)),
         catchError(this.handleError)
       );
   }
@@ -57,7 +51,7 @@ export class HomeService {
     const url = `${this.homeUrl}/${id}`;
     return this.http.delete<any>(url, { headers })
       .pipe(
-        tap(data => console.log('deleteProduct: ' + id)),
+        tap(data => id),
         catchError(this.handleError)
       );
   }
@@ -67,7 +61,7 @@ export class HomeService {
     const url = `${this.homeUrl}/${home.id}`;
     return this.http.put<any>(url, home, { headers })
       .pipe(
-        tap(() => console.log('updateHome: ' + home.id)),
+        tap(() => home.id),
         // Return the home on an update
          map(() => home),
         catchError(this.handleError)

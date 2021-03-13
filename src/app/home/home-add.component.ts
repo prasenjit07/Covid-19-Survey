@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'
-import { Observable, Subscription } from 'rxjs';
+import { Home, HomeResolved } from './home';
 import { HomeService } from './home.service';
 
 @Component({
@@ -13,10 +13,13 @@ export class HomeAddComponent implements OnInit {
 
   pageTitle = 'Home Edit';
   errorMessage: string;
-  home: any;
-  private sub: Subscription;
+  home: Home;
+  //private sub: Subscription;
   houseForm: FormGroup;
-  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute, private homeService: HomeService) { }
+  constructor(private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private homeService: HomeService) { }
 
   get membersFormArray(): FormArray {
     return this.houseForm.get('members') as FormArray;
@@ -28,21 +31,33 @@ export class HomeAddComponent implements OnInit {
       houseAddress: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(40)]],
       members: this.fb.array([])
     });
-    this.sub = this.route.paramMap.subscribe(
-      params => {
-        const id = +params.get('id');
-        this.getHome(id);
+    // this.sub = this.route.paramMap.subscribe(
+    //   params => {
+    //     const id = +params.get('id');
+    //     this.getHome(id);
+    //     if (id === 0) {
+    //       this.addMember();
+    //     }
+    //   }
+    // );
+    this.route.data.subscribe(data => {
+      const resolvedData: HomeResolved = data['resolvedData'];
+      this.errorMessage = resolvedData.error;
+      this.onHomeRetrieved(resolvedData.home);
+    })
 
+  }
 
-        if(id === 0){
-          this.addMember();
-        }
-      }
-    );
+  onHomeRetrieved(home: Home): void {
+    this.home = home;
+    this.displayHome(this.home)
+    if (this.home.id === 0) {
+      this.addMember();
+    }
   }
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.sub.unsubscribe();
+  // }
 
   addMember(): void {
     this.membersFormArray.push(this.buildMember());
@@ -56,13 +71,13 @@ export class HomeAddComponent implements OnInit {
     })
   }
 
-  getHome(id: number): void {
-    this.homeService.getHome(id)
-      .subscribe({
-        next: (home) => this.displayHome(home),
-        error: err => this.errorMessage = err
-      });
-  }
+  // getHome(id: number): void {
+  //   this.homeService.getHome(id)
+  //     .subscribe({
+  //       next: (home) => this.displayHome(home),
+  //       error: err => this.errorMessage = err
+  //     });
+  // }
 
   displayHome(home: any): void {
     if (this.houseForm) {
@@ -70,7 +85,7 @@ export class HomeAddComponent implements OnInit {
     }
 
     this.home = home;
-    console.log(this.home);
+    //console.log(this.home);
     if (this.home.id === 0) {
       this.pageTitle = 'Add Home';
     } else {
@@ -84,7 +99,7 @@ export class HomeAddComponent implements OnInit {
       houseAddress: this.home.houseAddress,
     });
 
-    
+
     //this.houseForm.setControl('members', this.createFormArrayWithMembers(this.home.members));
   }
 
@@ -119,8 +134,8 @@ export class HomeAddComponent implements OnInit {
   }
 
   deleteMember(index: number): void {
-      this.membersFormArray.removeAt(index);
-      this.membersFormArray.markAsDirty();
+    this.membersFormArray.removeAt(index);
+    this.membersFormArray.markAsDirty();
   }
 
   save(): void {
@@ -154,4 +169,6 @@ export class HomeAddComponent implements OnInit {
     this.houseForm.reset();
     this.router.navigate(['/home']);
   }
+  
+  
 }
