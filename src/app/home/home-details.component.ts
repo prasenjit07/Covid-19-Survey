@@ -6,7 +6,7 @@ import {HomeService} from './home.service'
 @Component({
   selector: 'app-home-details',
   templateUrl: './home-details.component.html',
-  styleUrls: ['./home-details.component.css']
+  //styleUrls: ['./home-details.component.css']
 })
 export class HomeDetailsComponent implements OnInit {
 

@@ -11,8 +11,10 @@ export class HomeAddGuard implements CanDeactivate<HomeAddComponent> {
     if(component.houseForm.dirty)
     {
       const houseNumber=component.houseForm.get('houseNumber').value;
-      if(component.houseForm.get('houseNumber').value)
+
+      if(houseNumber)
       return confirm(`You will lose all changes for houseNumber ${houseNumber}`);
+      //For a new house
       return confirm(`You will lose all changes for the new house`);
     }
     return true;

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Home, HomeResolved } from './home';
+import { Home,  HomesResolved } from './home';
 import {HomeService} from './home.service'
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  //styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
 
 
-  homes:Home;
+  homes:Home[];
   errorMessage:string='';
   constructor(private homeService: HomeService,private route:ActivatedRoute) {}
   
@@ -22,9 +22,9 @@ export class HomeComponent implements OnInit {
     //   },
     //   error: err => this.errorMessage = err
     // });
-    const resolvedData: HomeResolved = this.route.snapshot.data['resolvedData'];
+    const resolvedData: HomesResolved = this.route.snapshot.data['resolvedData'];
     this.errorMessage = resolvedData.error;
-    this.homes = resolvedData.home;
+    this.homes = resolvedData.homes;
   }
 
 }

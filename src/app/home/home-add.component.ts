@@ -7,7 +7,7 @@ import { HomeService } from './home.service';
 @Component({
   selector: 'app-home-add',
   templateUrl: './home-add.component.html',
-  styleUrls: ['./home-add.component.css']
+  //styleUrls: ['./home-add.component.css']
 })
 export class HomeAddComponent implements OnInit {
 

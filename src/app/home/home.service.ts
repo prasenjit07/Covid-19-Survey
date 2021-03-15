@@ -16,8 +16,8 @@ export class HomeService {
   
   constructor(private http : HttpClient) { }
 
-  getHomes(): Observable<Home> {
-    return this.http.get<Home>(this.homeUrl)
+  getHomes(): Observable<Home[]> {
+    return this.http.get<Home[]>(this.homeUrl)
       .pipe(
         tap(data => JSON.stringify(data)),
         catchError(this.handleError)

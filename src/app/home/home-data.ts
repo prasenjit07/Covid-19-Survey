@@ -1,6 +1,4 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
-
-
 export class HomeData implements InMemoryDbService {
 
   createDb(): { homes: any} {
